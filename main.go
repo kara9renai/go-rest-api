@@ -55,7 +55,7 @@ func todoIdHandler(w http.ResponseWriter, r *http.Request) {
 	if len(params) == 2 {
 		updateTodo(id, w, r)
 	} else if params[2] == "done" {
-		deleteDoneTodo(w)
+		deleteDoneTodos(w)
 	} else {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 	}
@@ -130,7 +130,7 @@ func deleteTodo(id int, w http.ResponseWriter) {
 }
 
 // 実行済みのタスクを削除
-func deleteDoneTodo(w http.ResponseWriter) {
+func deleteDoneTodos(w http.ResponseWriter) {
 	_, err := database.Db.Exec(`DELETE FROM todos WHERE done = true`)
 	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
