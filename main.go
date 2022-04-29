@@ -55,7 +55,7 @@ func todoIdHandler(w http.ResponseWriter, r *http.Request) {
 	if len(params) == 2 {
 		updateTodo(id, w, r)
 	} else if params[2] == "done" {
-		// update
+		deleteDoneTodo(w)
 	} else {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 	}
