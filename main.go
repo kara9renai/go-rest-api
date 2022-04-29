@@ -34,6 +34,8 @@ func todoHandler(w http.ResponseWriter, r *http.Request) {
 		getAllTodos(w, r)
 	case "POST":
 		postNewTodo(w, r)
+	case "DELETE":
+		deleteDoneTodos(w)
 	}
 }
 
@@ -55,7 +57,7 @@ func todoIdHandler(w http.ResponseWriter, r *http.Request) {
 	if len(params) == 2 {
 		updateTodo(id, w, r)
 	} else if params[2] == "done" {
-		deleteDoneTodos(w)
+		updateDoneTodo(id, w, r)
 	} else {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 	}
@@ -120,6 +122,15 @@ func updateTodo(id int, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func updateDoneTodo(id int, w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "PUT":
+		doneTodo(id, w, r)
+	default:
+		http.Error(w, http.StatusText(500), 500)
+	}
+}
+
 // 指定されたidのtodoを削除
 func deleteTodo(id int, w http.ResponseWriter) {
 	_, err := database.Db.Exec(`DELETE FROM todos WHERE id = ?`, id)
@@ -136,4 +147,16 @@ func deleteDoneTodos(w http.ResponseWriter) {
 		http.Error(w, http.StatusText(500), 500)
 	}
 	w.WriteHeader(200)
+}
+
+func doneTodo(id int, w http.ResponseWriter, r *http.Request) {
+	if id == -1 {
+		http.Error(w, http.StatusText(500), 500)
+		return
+	}
+	_, err := database.Db.Exec(`UPDATE todos SET done=true WHERE id = ?`, id)
+	if err != nil {
+		http.Error(w, http.StatusText(500), 500)
+	}
+	w.WriteHeader(201)
 }
