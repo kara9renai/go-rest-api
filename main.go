@@ -129,6 +129,7 @@ func deleteTodo(id int, w http.ResponseWriter) {
 	w.WriteHeader(200)
 }
 
+// 実行済みのタスクを削除
 func deleteDoneTodo(w http.ResponseWriter) {
 	_, err := database.Db.Exec(`DELETE FROM todos WHERE done = true`)
 	if err != nil {
