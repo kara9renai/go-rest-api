@@ -149,6 +149,7 @@ func deleteDoneTodos(w http.ResponseWriter) {
 	w.WriteHeader(200)
 }
 
+// 指定したidを実行済みにする
 func doneTodo(id int, w http.ResponseWriter, r *http.Request) {
 	if id == -1 {
 		http.Error(w, http.StatusText(500), 500)
